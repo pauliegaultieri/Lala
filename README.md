@@ -100,3 +100,5 @@ See `env.example` for required configuration:
 ## License
 
 Private project — All rights reserved.
+
+Yay!
