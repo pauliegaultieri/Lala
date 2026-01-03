@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /unauthorized
+
+Sitemap: https://sabrvalues.com/sitemap.xml

@@ -1,0 +1,51 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Users collection
+    match /users/{userId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update: if request.auth != null && 
+        (request.auth.uid == userId || 
+         request.resource.data.robloxId == resource.data.robloxId);
+      allow delete: if false;
+    }
+    
+    // Brainrots collection (read-only for users)
+    match /brainrots/{brainrotId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    
+    // Mutations collection (read-only)
+    match /mutations/{mutationId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    
+    // Traits collection (read-only)
+    match /traits/{traitId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    
+    // Rarities collection (read-only)
+    match /rarities/{rarityId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    
+    // Trades collection
+    match /trades/{tradeId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update: if request.auth != null && 
+        (resource.data.ownerId == request.auth.uid || 
+         resource.data.joinedBy == request.auth.uid);
+      allow delete: if request.auth != null && 
+        resource.data.ownerId == request.auth.uid &&
+        resource.data.status == 'active';
+    }
+  }
+}
