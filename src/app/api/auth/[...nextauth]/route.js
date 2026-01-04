@@ -32,9 +32,14 @@ function RobloxProvider(options) {
           }),
         });
         const tokens = await response.json();
+        if (!tokens.access_token) {
+          console.error("[Roblox OAuth] Token exchange failed:", JSON.stringify(tokens));
+          throw new Error(tokens.error || "Token exchange failed");
+        }
         return { tokens };
       },
     },
+    idToken: true,
     userinfo: {
       url: "https://apis.roblox.com/oauth/v1/userinfo",
       async request({ tokens, provider }) {
