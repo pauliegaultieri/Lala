@@ -7,7 +7,7 @@ function RobloxProvider(options) {
     name: "Roblox",
     type: "oauth",
     authorization: {
-      url: "https://apis.roblox.com/oauth/v1/authorize",
+      url: "https://authorize.roblox.com/",
       params: {
         scope: "openid profile",
         response_type: "code",
@@ -16,6 +16,8 @@ function RobloxProvider(options) {
     token: {
       url: "https://apis.roblox.com/oauth/v1/token",
       async request({ client, params, checks, provider }) {
+        const baseUrl = "https://sabrvalues.com";
+        const redirectUri = `${baseUrl}/api/auth/callback/roblox`;
         const response = await fetch("https://apis.roblox.com/oauth/v1/token", {
           method: "POST",
           headers: {
@@ -26,13 +28,10 @@ function RobloxProvider(options) {
             client_secret: provider.clientSecret,
             code: params.code,
             grant_type: "authorization_code",
-            redirect_uri: provider.callbackUrl,
+            redirect_uri: redirectUri,
           }),
         });
         const tokens = await response.json();
-        if (tokens.error) {
-          console.error("[Roblox OAuth] Token error:", tokens);
-        }
         return { tokens };
       },
     },
