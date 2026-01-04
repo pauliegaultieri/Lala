@@ -30,6 +30,9 @@ function RobloxProvider(options) {
           }),
         });
         const tokens = await response.json();
+        if (tokens.error) {
+          console.error("[Roblox OAuth] Token error:", tokens);
+        }
         return { tokens };
       },
     },
