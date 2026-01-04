@@ -1,50 +1,31 @@
 "use client";
 
-import { ArrowUpRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Loader2 } from "lucide-react";
 import { FadeIn } from "@/components/Animations";
-
-const teamMembers = [
-  {
-    id: 1,
-    name: "Sentry",
-    role: "CEO",
-  },
-  {
-    id: 2,
-    name: "Shin",
-    role: "Full Stack Developer",
-  },
-];
-
-function CreditCard({ name, role }) {
-  return (
-    <div className="flex flex-col">
-      {/* Image Container */}
-      <div className="relative w-full aspect-square bg-[#E8E8F0] dark:bg-slate-800 rounded-[20px] sm:rounded-[24px] overflow-hidden transition-colors">
-        {/* Placeholder for avatar image */}
-      </div>
-      
-      {/* Info Section */}
-      <div className="flex items-center justify-between mt-4 sm:mt-5">
-        <div className="flex flex-col">
-          <h3 className="font-pp-mori font-semibold text-lg sm:text-xl lg:text-2xl text-[#020617] dark:text-white transition-colors">
-            {name}
-          </h3>
-          <p className="font-urbanist text-sm sm:text-base text-[#64748B] dark:text-gray-400 transition-colors">
-            {role}
-          </p>
-        </div>
-        
-        {/* Arrow Button */}
-        <button className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#4F46E5] flex items-center justify-center text-white hover:bg-[#6366F1] transition-colors cursor-pointer">
-          <ArrowUpRight size={18} className="sm:w-5 sm:h-5" />
-        </button>
-      </div>
-    </div>
-  );
-}
+import CreditCard from "@/components/CreditCard/CreditCard";
 
 export default function CreditsPage() {
+  const [credits, setCredits] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchCredits() {
+      try {
+        const res = await fetch("/api/credits");
+        if (res.ok) {
+          const data = await res.json();
+          setCredits(data.credits || []);
+        }
+      } catch (error) {
+        console.error("Failed to fetch credits:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchCredits();
+  }, []);
+
   return (
     <div className="min-h-screen w-full bg-white dark:bg-slate-950 transition-colors">
       <section className="flex flex-col items-center w-full px-4 sm:px-6 md:px-8 lg:px-16 py-10 sm:py-14 lg:py-20">
@@ -64,16 +45,28 @@ export default function CreditsPage() {
 
         {/* Team Cards Grid */}
         <div className="mt-12 sm:mt-14 lg:mt-16 w-full max-w-[700px]">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
-            {teamMembers.map((member) => (
-              <FadeIn key={member.id} duration={0.5} distance={25}>
-                <CreditCard
-                  name={member.name}
-                  role={member.role}
-                />
-              </FadeIn>
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-[#4F46E5]" />
+            </div>
+          ) : credits.length === 0 ? (
+            <p className="text-center text-gray-500 dark:text-gray-400 font-urbanist py-12">
+              No credits to display yet.
+            </p>
+          ) : (
+            <div className={`grid gap-6 sm:gap-8 lg:gap-10 ${credits.length === 1 ? 'grid-cols-1 max-w-[300px] mx-auto' : 'grid-cols-1 sm:grid-cols-2'}`}>
+              {credits.map((credit, index) => (
+                <FadeIn key={credit.id} delay={index * 0.1} duration={0.5} distance={25}>
+                  <CreditCard
+                    name={credit.name}
+                    title={credit.title}
+                    imageUrl={credit.imageUrl}
+                    link={credit.link}
+                  />
+                </FadeIn>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </div>

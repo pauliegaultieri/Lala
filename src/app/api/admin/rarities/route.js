@@ -92,7 +92,7 @@ async function uploadImageToStorage({ file, objectKey }) {
 export async function GET(request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!isSessionAdmin(session)) {
+    if (!(await isSessionAdmin(session))) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -116,7 +116,7 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!isSessionAdmin(session)) {
+    if (!(await isSessionAdmin(session))) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

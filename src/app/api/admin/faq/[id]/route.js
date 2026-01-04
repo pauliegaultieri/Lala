@@ -10,7 +10,7 @@ export const runtime = "nodejs";
 export async function GET(request, { params }) {
   try {
     const session = await getServerSession(authOptions);
-    if (!isSessionAdmin(session)) {
+    if (!(await isSessionAdmin(session))) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -42,7 +42,7 @@ export async function GET(request, { params }) {
 export async function PUT(request, { params }) {
   try {
     const session = await getServerSession(authOptions);
-    if (!isSessionAdmin(session)) {
+    if (!(await isSessionAdmin(session))) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -89,7 +89,7 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     const session = await getServerSession(authOptions);
-    if (!isSessionAdmin(session)) {
+    if (!(await isSessionAdmin(session))) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
