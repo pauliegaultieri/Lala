@@ -11,6 +11,7 @@ function RobloxProvider(options) {
       params: {
         scope: "openid profile",
         response_type: "code",
+        code_challenge_method: "S256",
       },
     },
     token: {
@@ -18,18 +19,22 @@ function RobloxProvider(options) {
       async request({ client, params, checks, provider }) {
         const baseUrl = "https://sabrvalues.com";
         const redirectUri = `${baseUrl}/api/auth/callback/roblox`;
+        const body = {
+          client_id: provider.clientId,
+          client_secret: provider.clientSecret,
+          code: params.code,
+          grant_type: "authorization_code",
+          redirect_uri: redirectUri,
+        };
+        if (checks?.code_verifier) {
+          body.code_verifier = checks.code_verifier;
+        }
         const response = await fetch("https://apis.roblox.com/oauth/v1/token", {
           method: "POST",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
           },
-          body: new URLSearchParams({
-            client_id: provider.clientId,
-            client_secret: provider.clientSecret,
-            code: params.code,
-            grant_type: "authorization_code",
-            redirect_uri: redirectUri,
-          }),
+          body: new URLSearchParams(body),
         });
         const tokens = await response.json();
         if (!tokens.access_token) {
@@ -68,7 +73,7 @@ function RobloxProvider(options) {
     },
     clientId: options.clientId,
     clientSecret: options.clientSecret,
-    checks: ["state"],
+    checks: ["state", "pkce"],
     profile(profile) {
       return {
         id: profile.sub,
@@ -90,8 +95,8 @@ function RobloxProvider(options) {
 export const authOptions = {
   providers: [
     RobloxProvider({
-      clientId: process.env.ROBLOX_CLIENT_ID,
-      clientSecret: process.env.ROBLOX_CLIENT_SECRET,
+      clientId: "3019787755922195688",
+      clientSecret: "RBX-wqFMcEPVYE-GMvRBbUebNl2bF2gBZnk0kHvQwaihPwM8yvOZ7jKsFQQIjbQnTNIo",
     }),
   ],
   callbacks: {
@@ -135,7 +140,7 @@ export const authOptions = {
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: "sx032jc7tJKNaqFASIz8cLKGHvhDAjNHTDd556wJ1Wo=",
 };
 
 const handler = NextAuth(authOptions);
