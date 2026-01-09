@@ -257,6 +257,43 @@ export async function PUT(request, { params }) {
       overridesById: traitOverridesById,
     };
 
+    // Get current data for comparison
+    const currentData = brainrotDoc.data();
+    const currentValueLGC = currentData.valueLGC;
+    const currentDemand = currentData.demand;
+    const currentMutationsConfig = currentData.mutationsConfig || {};
+    const currentTraitsConfig = currentData.traitsConfig || {};
+
+    // Helper to check if overrides actually changed (not just enabled with defaults)
+    function hasOverrideChanges(oldOverrides, newOverrides) {
+      const oldKeys = Object.keys(oldOverrides || {});
+      const newKeys = Object.keys(newOverrides || {});
+      
+      // Check if any override was added or removed
+      if (oldKeys.length !== newKeys.length) return true;
+      
+      // Check if any override multiplier changed
+      for (const key of newKeys) {
+        const oldMult = oldOverrides?.[key]?.multiplier;
+        const newMult = newOverrides?.[key]?.multiplier;
+        if (oldMult !== newMult) return true;
+      }
+      
+      return false;
+    }
+
+    // Determine if this is a "true" value change
+    const hasValueChange = currentValueLGC !== valueLGC;
+    const hasDemandChange = currentDemand !== demand;
+    const hasMutationOverrideChanges = hasOverrideChanges(
+      currentMutationsConfig.overridesById,
+      overridesById
+    );
+    const hasTraitOverrideChanges = hasOverrideChanges(
+      currentTraitsConfig.overridesById,
+      traitOverridesById
+    );
+
     // Update brainrot document
     const brainrotData = {
       name: name.trim(),
@@ -273,6 +310,25 @@ export async function PUT(request, { params }) {
       traitsConfig,
       updatedAt: FieldValue.serverTimestamp(),
     };
+
+    // Only store previous values if there are actual changes
+    // (not just enabling mutations/traits with default multipliers)
+    if (hasValueChange) {
+      brainrotData.previousValueLGC = currentValueLGC;
+    }
+    
+    if (hasDemandChange) {
+      brainrotData.previousDemand = currentDemand;
+    }
+
+    // Only store previous configs if overrides actually changed
+    if (hasMutationOverrideChanges) {
+      brainrotData.previousMutationsConfig = currentMutationsConfig;
+    }
+    
+    if (hasTraitOverrideChanges) {
+      brainrotData.previousTraitsConfig = currentTraitsConfig;
+    }
 
     // Add published timestamp if published and not already published
     if (published && !brainrotDoc.data().publishedAt) {

@@ -277,7 +277,7 @@ export default function Page() {
 
               {/* RIGHT COLUMN FOR DISPLAYING THE INFO OF THE BRAINROT */}
               <BrainrotInfo
-                value={`${Number(calculated?.finalValueLGC ?? brainrot.valueLGC ?? 0).toFixed(6)} LGC`}
+                value={`${Number(calculated?.finalValueLGC ?? brainrot.valueLGC ?? 0).toFixed(2)} LGC`}
                 demand={brainrot.demand === "very-high" ? 3 : brainrot.demand === "high" ? 2 : 1}
                 rarity={rarity}
                 cost={cost}

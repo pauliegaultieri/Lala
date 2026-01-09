@@ -34,8 +34,8 @@ export default function BrainrotForm({ initialData = null }) {
   const [rarities, setRarities] = useState([]);
   const [mutations, setMutations] = useState([]);
   const [traits, setTraits] = useState([]);
-  const [isMutationsSectionOpen, setIsMutationsSectionOpen] = useState(false);
-  const [isTraitsSectionOpen, setIsTraitsSectionOpen] = useState(false);
+  const [isMutationsSectionOpen, setIsMutationsSectionOpen] = useState(true);
+  const [isTraitsSectionOpen, setIsTraitsSectionOpen] = useState(true);
   const [mutationSearch, setMutationSearch] = useState("");
   const [traitSearch, setTraitSearch] = useState("");
 
@@ -498,28 +498,30 @@ export default function BrainrotForm({ initialData = null }) {
               </span>
             </button>
 
-            {isMutationsSectionOpen && mutations.length > 0 && (
-              <div className="mt-4">
-                <div className="relative">
-                  <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <input
-                    type="text"
-                    value={mutationSearch}
-                    onChange={(e) => setMutationSearch(e.target.value)}
-                    placeholder="Search mutations..."
-                    className="block w-full pl-9 pr-3 py-2 rounded-[10px] border border-[#E5E7EB] dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-urbanist text-[#020617] dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-colors"
-                  />
-                </div>
-              </div>
-            )}
+            {isMutationsSectionOpen && (
+              <>
+                {mutations.length > 0 && (
+                  <div className="mt-4">
+                    <div className="relative">
+                      <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <input
+                        type="text"
+                        value={mutationSearch}
+                        onChange={(e) => setMutationSearch(e.target.value)}
+                        placeholder="Search mutations..."
+                        className="block w-full pl-9 pr-3 py-2 rounded-[10px] border border-[#E5E7EB] dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-urbanist text-[#020617] dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-colors"
+                      />
+                    </div>
+                  </div>
+                )}
 
-            <div className={`grid grid-cols-1 gap-4 ${isMutationsSectionOpen ? "mt-4" : "mt-5"}`}>
-              {mutations.length === 0 ? (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  No mutations found. Create some in the admin mutations section.
-                </p>
-              ) : (
-                filteredMutations.map((mutation) => {
+                <div className="grid grid-cols-1 gap-4 mt-4">
+                  {mutations.length === 0 ? (
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      No mutations found. Create some in the admin mutations section.
+                    </p>
+                  ) : (
+                    filteredMutations.map((mutation) => {
                   const id = String(mutation.id);
                   const isEnabled = enabledMutationIds.includes(id);
                   const override = mutationOverrides[id] || {
@@ -698,7 +700,9 @@ export default function BrainrotForm({ initialData = null }) {
                   );
                 })
               )}
-            </div>
+                </div>
+              </>
+            )}
           </div>
       </div>
 
@@ -731,28 +735,30 @@ export default function BrainrotForm({ initialData = null }) {
               </span>
             </button>
 
-            {isTraitsSectionOpen && traits.length > 0 && (
-              <div className="mt-4">
-                <div className="relative">
-                  <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <input
-                    type="text"
-                    value={traitSearch}
-                    onChange={(e) => setTraitSearch(e.target.value)}
-                    placeholder="Search traits..."
-                    className="block w-full pl-9 pr-3 py-2 rounded-[10px] border border-[#E5E7EB] dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-urbanist text-[#020617] dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-colors"
-                  />
-                </div>
-              </div>
-            )}
+            {isTraitsSectionOpen && (
+              <>
+                {traits.length > 0 && (
+                  <div className="mt-4">
+                    <div className="relative">
+                      <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <input
+                        type="text"
+                        value={traitSearch}
+                        onChange={(e) => setTraitSearch(e.target.value)}
+                        placeholder="Search traits..."
+                        className="block w-full pl-9 pr-3 py-2 rounded-[10px] border border-[#E5E7EB] dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-urbanist text-[#020617] dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-colors"
+                      />
+                    </div>
+                  </div>
+                )}
 
-            <div className={`grid grid-cols-1 gap-4 ${isTraitsSectionOpen ? "mt-4" : "mt-5"}`}>
-              {traits.length === 0 ? (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  No traits found. Create some in the admin traits section.
-                </p>
-              ) : (
-                filteredTraits.map((trait) => {
+                <div className="grid grid-cols-1 gap-4 mt-4">
+                  {traits.length === 0 ? (
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      No traits found. Create some in the admin traits section.
+                    </p>
+                  ) : (
+                    filteredTraits.map((trait) => {
                   const id = String(trait.id);
                   const isEnabled = enabledTraitIds.includes(id);
                   const override = traitOverrides[id] || { multiplier: "" };
@@ -836,7 +842,9 @@ export default function BrainrotForm({ initialData = null }) {
                   );
                 })
               )}
-            </div>
+                </div>
+              </>
+            )}
           </div>
       </div>
 

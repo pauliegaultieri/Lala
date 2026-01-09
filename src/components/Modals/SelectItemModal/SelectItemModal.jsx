@@ -247,9 +247,9 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
               className="absolute inset-0 bg-black/70 backdrop-blur-md"
               onClick={() => setConfigBrainrot(null)}
             />
-            <div className="relative w-full max-w-[600px] bg-gradient-to-br from-white to-gray-50 dark:from-slate-900 dark:to-slate-800 rounded-[24px] shadow-2xl border border-white/20 dark:border-slate-700/50 overflow-hidden">
+            <div className="relative w-full max-w-[600px] max-h-[90vh] bg-gradient-to-br from-white to-gray-50 dark:from-slate-900 dark:to-slate-800 rounded-[24px] shadow-2xl border border-white/20 dark:border-slate-700/50 overflow-hidden flex flex-col">
               {/* Header */}
-              <div className="relative bg-[#4F46E5] p-6 text-white">
+              <div className="relative bg-[#4F46E5] p-6 text-white shrink-0">
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="font-pp-mori font-bold text-2xl">Customize Your Brainrot</h3>
@@ -265,8 +265,11 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
                 </div>
               </div>
 
-              {/* Content */}
-              <div className="p-6 space-y-6">
+              {/* Scrollable Content */}
+              <div 
+                className="p-6 space-y-6 overflow-y-auto modal-scrollbar flex-1"
+                onWheel={(e) => e.stopPropagation()}
+              >
                 {/* Brainrot Info */}
                 <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-indigo-50 to-[#4F46E5]/10 dark:from-indigo-900/20 dark:to-[#4F46E5]/20 rounded-[16px] border border-[#4F46E5]/20">
                   <img
@@ -277,7 +280,7 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
                   <div className="flex-1">
                     <h4 className="font-urbanist font-semibold text-lg text-gray-900 dark:text-white">{configBrainrot.name}</h4>
                     <p className="font-pp-mori text-sm text-gray-600 dark:text-gray-400">
-                      Base: {Number(configBrainrot.valueLGC || 0).toFixed(6)} LGC
+                      Base: {Number(configBrainrot.valueLGC || 0).toFixed(2)} LGC
                     </p>
                   </div>
                 </div>
@@ -290,6 +293,16 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
                       <h4 className="font-urbanist font-semibold text-gray-900 dark:text-white">Mutation</h4>
                       <span className="text-xs text-gray-500 dark:text-gray-400">(choose 1)</span>
                     </div>
+                    
+                    {configAllowedMutations.length > 6 && (
+                      <input
+                        type="text"
+                        placeholder="Search mutations..."
+                        value={configMutationSearch}
+                        onChange={(e) => setConfigMutationSearch(e.target.value)}
+                        className="w-full px-3 py-2 rounded-[10px] text-sm font-urbanist border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#4F46E5]/50"
+                      />
+                    )}
                     
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                       <button
@@ -334,6 +347,16 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
                       <span className="text-xs text-gray-500 dark:text-gray-400">(choose any)</span>
                     </div>
                     
+                    {configAllowedTraits.length > 6 && (
+                      <input
+                        type="text"
+                        placeholder="Search traits..."
+                        value={configTraitSearch}
+                        onChange={(e) => setConfigTraitSearch(e.target.value)}
+                        className="w-full px-3 py-2 rounded-[10px] text-sm font-urbanist border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#4F46E5]/50"
+                      />
+                    )}
+                    
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                       {filteredConfigTraits.map((t) => {
                         const id = String(t.id);
@@ -361,7 +384,10 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
                     </div>
                   </div>
                 )}
+              </div>
 
+              {/* Fixed Footer */}
+              <div className="p-6 pt-0 space-y-4 shrink-0">
                 {/* Final Value Display */}
                 <div className="bg-gradient-to-r from-indigo-50 to-[#4F46E5]/10 dark:from-indigo-900/20 dark:to-[#4F46E5]/20 rounded-[16px] p-6 border border-[#4F46E5]/20">
                   <div className="flex items-center justify-between">
@@ -371,7 +397,7 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
                     </div>
                     <div className="text-right">
                       <div className="font-pp-mori text-2xl font-bold text-[#4F46E5] dark:text-[#6366F1]">
-                        {Number(configResolved.calculated?.finalValueLGC ?? configBrainrot.valueLGC ?? 0).toFixed(6)} LGC
+                        {Number(configResolved.calculated?.finalValueLGC ?? configBrainrot.valueLGC ?? 0).toFixed(2)} LGC
                       </div>
                       {configResolved.calculated?.finalValueLGC > configBrainrot.valueLGC && (
                         <div className="font-urbanist text-xs text-[#4F46E5] dark:text-[#6366F1] font-medium">
@@ -383,7 +409,7 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex gap-3 pt-2">
+                <div className="flex gap-3">
                   <button
                     type="button"
                     onClick={() => setConfigBrainrot(null)}
@@ -537,7 +563,7 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
                 key={brainrot.id}
                 imageSrc={brainrot.imageUrl || "/images/temp/roblox.webp"}
                 name={brainrot.name}
-                value={`${brainrot.valueLGC?.toFixed(6)} LGC`}
+                value={`${brainrot.valueLGC?.toFixed(2)} LGC`}
                 demand={brainrot.demand === "very-high" ? 3 : brainrot.demand === "high" ? 2 : 1}
                 postedAmount={getTimeAgo(brainrot.createdAt)?.amount || 0}
                 postedUnit={getTimeAgo(brainrot.createdAt)?.unit || ''}

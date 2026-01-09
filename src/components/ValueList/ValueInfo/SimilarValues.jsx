@@ -132,7 +132,7 @@ export default function SimilarValues() {
                   <ValueCard
                     imageSrc={item.imageUrl || "/images/temp/roblox.webp"}
                     name={item.name}
-                    value={`${Number(item.valueLGC || 0).toFixed(6)} LGC`}
+                    value={`${Number(item.valueLGC || 0).toFixed(2)} LGC`}
                     demand={
                       item.demand === "very-high" ? 3 : item.demand === "high" ? 2 : 1
                     }

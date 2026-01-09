@@ -20,7 +20,10 @@ export function calculateBrainrotValue(baseValueLGC, mutation = null, traits = [
 
   // Total multiplier is simply the sum of mutation + all traits
   const totalMultiplier = mutationMultiplier + traitsMultiplier;
-  const finalValueLGC = baseValueLGC * totalMultiplier;
+  
+  // If no modifiers are selected (totalMultiplier = 0), return base value
+  // Otherwise apply the multiplier
+  const finalValueLGC = totalMultiplier === 0 ? baseValueLGC : baseValueLGC * totalMultiplier;
 
   return {
     mutationMultiplier,
@@ -180,7 +183,7 @@ export function formatLGCValue(value) {
     return value.toFixed(3);
   }
   if (value >= 0.001) {
-    return value.toFixed(6);
+    return value.toFixed(2);
   }
   if (value > 0) {
     return `< 0.001`;

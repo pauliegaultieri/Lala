@@ -1,6 +1,7 @@
 export const navLinks = [
   { href: "/calculator", label: "Calculator" },
   { href: "/values", label: "Value List" },
+  { href: "/value-updates", label: "Value Updates" },
   { href: "/trades", label: "Trades" },
   { href: "/guides", label: "Guides" },
   { href: "/credits", label: "Credits" },

@@ -117,7 +117,7 @@ export default function Page() {
                     <ValueCard
                       imageSrc={brainrot.imageUrl || "/images/temp/roblox.webp"}
                       name={brainrot.name}
-                      value={`${Number(brainrot.valueLGC || 0).toFixed(6)} LGC`}
+                      value={`${Number(brainrot.valueLGC || 0).toFixed(2)} LGC`}
                       demand={
                         brainrot.demand === "very-high" ? 3 : brainrot.demand === "high" ? 2 : 1
                       }
