@@ -24,9 +24,8 @@ export async function GET(request) {
     const limit = parseInt(limitParam, 10) || 20;
     const days = parseInt(daysParam, 10) || 7;
 
-    // Calculate the date threshold
-    const dateThreshold = new Date();
-    dateThreshold.setDate(dateThreshold.getDate() - days);
+    // Fixed cutoff date: Jan 9th 2026 12 AM UTC
+    const dateThreshold = new Date('2026-01-09T00:00:00.000Z');
 
     // Fetch mutations and traits for name lookup
     const [mutationsSnapshot, traitsSnapshot] = await Promise.all([
