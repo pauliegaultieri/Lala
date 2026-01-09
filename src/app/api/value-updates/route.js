@@ -82,9 +82,18 @@ export async function GET(request) {
     });
 
     // Filter brainrots that have been updated within the specified days
+    // AND have actual update data (previousValueLGC, previousDemand, or previous configs)
     let updates = brainrots.filter(b => {
       if (!b.updatedAt) return false;
-      return b.updatedAt >= dateThreshold;
+      if (b.updatedAt < dateThreshold) return false;
+      
+      // Only show if there's actual update data
+      const hasValueUpdate = b.previousValueLGC !== undefined;
+      const hasDemandUpdate = b.previousDemand !== undefined;
+      const hasMutationUpdate = b.previousMutationsConfig !== undefined;
+      const hasTraitUpdate = b.previousTraitsConfig !== undefined;
+      
+      return hasValueUpdate || hasDemandUpdate || hasMutationUpdate || hasTraitUpdate;
     });
 
     // Filter by search query
