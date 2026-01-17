@@ -160,16 +160,21 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
   useEffect(() => {
     const lenis = lenisRef?.current;
     const modal = modalRef.current;
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+
+    if (isOpen && lenis && !isMobile) {
+      lenis.stop();
+    }
 
     if (isOpen) {
       document.body.style.overflow = "hidden";
-      document.documentElement.style.overflow = "hidden";
+      // document.documentElement.style.overflow = "hidden";
       if (lenis) {
         lenis.stop();
       }
     } else {
       document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
+      // document.documentElement.style.overflow = "";
       if (lenis) {
         lenis.start();
       }
@@ -182,7 +187,7 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
       }
     };
 
-    if (isOpen) {
+    if (isOpen && !isMobile) {
       window.addEventListener("wheel", handleWheel, { passive: false });
     }
 

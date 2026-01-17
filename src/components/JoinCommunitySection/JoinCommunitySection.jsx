@@ -34,7 +34,7 @@ export default function JoinCommunitySection() {
                 Open Calculator
               </button>
               <a
-                href="https://discord.gg/N65HRSYz"
+                href="https://discord.gg/sabrvalues"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-6 sm:px-8 py-2.5 sm:py-3 rounded-[10px] bg-[#5865F2] text-sm sm:text-base font-medium text-white transition-all duration-200 ease-out hover:bg-[#4752C4] hover:scale-[1.02] hover:shadow-[0_4px_12px_rgba(88,101,242,0.4)] active:scale-[0.98] cursor-pointer font-urbanist flex items-center justify-center gap-2"

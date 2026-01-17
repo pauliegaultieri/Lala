@@ -79,7 +79,7 @@ export default function Footer() {
             {/* Discord Link */}
             <div className="flex justify-center">
               <a
-                href="https://discord.gg/N65HRSYz"
+                href="https://discord.gg/sabrvalues"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="
