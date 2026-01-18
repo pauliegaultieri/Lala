@@ -160,36 +160,36 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
   useEffect(() => {
     const lenis = lenisRef?.current;
     const modal = modalRef.current;
-    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    // const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
-    if (isOpen && lenis && !isMobile) {
-      lenis.stop();
-    }
+    // if (isOpen && lenis && !isMobile) {
+    //   lenis.stop();
+    // }
 
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-      // document.documentElement.style.overflow = "hidden";
-      if (lenis) {
-        lenis.stop();
-      }
-    } else {
-      document.body.style.overflow = "";
-      // document.documentElement.style.overflow = "";
-      if (lenis) {
-        lenis.start();
-      }
-    }
+    // if (isOpen) {
+    //   // document.body.style.overflow = "hidden";
+    //   // document.documentElement.style.overflow = "hidden";
+    //   if (lenis) {
+    //     lenis.stop();
+    //   }
+    // } else {
+    //   document.body.style.overflow = "";
+    //   // document.documentElement.style.overflow = "";
+    //   if (lenis) {
+    //     lenis.start();
+    //   }
+    // }
 
-    // Handle wheel events to allow modal scrolling
-    const handleWheel = (e) => {
-      if (modal && modal.contains(e.target)) {
-        e.stopPropagation();
-      }
-    };
+    // // Handle wheel events to allow modal scrolling
+    // const handleWheel = (e) => {
+    //   if (modal && modal.contains(e.target)) {
+    //     e.stopPropagation();
+    //   }
+    // };
 
-    if (isOpen && !isMobile) {
-      window.addEventListener("wheel", handleWheel, { passive: false });
-    }
+    // if (isOpen && !isMobile) {
+    //   window.addEventListener("wheel", handleWheel, { passive: false });
+    // }
 
     return () => {
       document.body.style.overflow = "";
