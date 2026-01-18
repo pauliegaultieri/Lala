@@ -160,23 +160,42 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
   useEffect(() => {
     const lenis = lenisRef?.current;
     const modal = modalRef.current;
-    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-
-    if (isOpen && lenis && !isMobile) {
-      lenis.stop();
-    }
+    const htmlElement = document.documentElement;
 
     if (isOpen) {
-      // document.body.style.overflow = "hidden";
-      // document.documentElement.style.overflow = "hidden";
+      // Stop Lenis
       if (lenis) {
         lenis.stop();
       }
+
+      // Remove lenis class and add stopped class
+      htmlElement.classList.remove('lenis', 'lenis-smooth');
+      htmlElement.classList.add('lenis-stopped');
+      
+      // Lock body scroll
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = "";
-      // document.documentElement.style.overflow = "";
+      // Restore Lenis
       if (lenis) {
         lenis.start();
+      }
+
+      // Restore lenis classes
+      htmlElement.classList.remove('lenis-stopped');
+      htmlElement.classList.add('lenis', 'lenis-smooth');
+      
+      // Unlock body scroll and restore position
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
       }
     }
 
@@ -187,16 +206,38 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
       }
     };
 
-    if (isOpen && !isMobile) {
+    // Handle touch events for mobile
+    const handleTouchMove = (e) => {
+      if (modal && !modal.contains(e.target)) {
+        e.preventDefault();
+      }
+    };
+
+    if (isOpen) {
       window.addEventListener("wheel", handleWheel, { passive: false });
+      document.addEventListener("touchmove", handleTouchMove, { passive: false });
     }
 
     return () => {
-      document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
       window.removeEventListener("wheel", handleWheel);
-      if (lenis) {
-        lenis.start();
+      document.removeEventListener("touchmove", handleTouchMove);
+      
+      if (!isOpen) {
+        // Cleanup
+        const scrollY = document.body.style.top;
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.style.overflow = '';
+        if (scrollY) {
+          window.scrollTo(0, parseInt(scrollY || '0') * -1);
+        }
+        
+        if (lenis) {
+          lenis.start();
+        }
+        htmlElement.classList.remove('lenis-stopped');
+        htmlElement.classList.add('lenis', 'lenis-smooth');
       }
     };
   }, [isOpen, lenisRef]);
