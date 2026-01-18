@@ -45,7 +45,7 @@ export function calculateBrainrotValue(baseValueLGC, mutation = null, traits = [
  * @returns {object} - Result and percentage
  */
 export function calculateTradeResult(offeringTotal, lookingForTotal) {
-  const difference = lookingForTotal - offeringTotal;
+  const difference = offeringTotal - lookingForTotal;
   const maxValue = Math.max(offeringTotal, lookingForTotal);
   
   if (maxValue === 0) {
@@ -62,7 +62,7 @@ export function calculateTradeResult(offeringTotal, lookingForTotal) {
   // From poster's perspective:
   // If offering more than receiving = Loss
   // If offering less than receiving = Win
-  const result = difference > 0 ? "loss" : "win";
+  const result = difference > 0 ? "win" : "lose";
   
   return { 
     result, 
