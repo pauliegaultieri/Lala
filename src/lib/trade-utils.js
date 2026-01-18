@@ -71,15 +71,15 @@ export function calculateTradeResult(offeringTotal, lookingForTotal) {
 }
 
 function flipTradeResult(result) {
-  if (result === "win") return "win";
-  if (result === "loss") return "loss";
+  if (result === "win") return "loss";
+  if (result === "loss") return "win";
   return result;
 }
 
 export function getTradeResultForUser({ result, ownerRobloxId }, userRobloxId) {
   if (!result) return null;
-  if (!userRobloxId) return flipTradeResult(result);
-  if (!ownerRobloxId) return flipTradeResult(result);
+  if (!userRobloxId) return result;
+  if (!ownerRobloxId) return result;
 
   const isOwner = String(userRobloxId) === String(ownerRobloxId);
   return isOwner ? result : flipTradeResult(result);
