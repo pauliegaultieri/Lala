@@ -78,7 +78,7 @@ function flipTradeResult(result) {
 
 export function getTradeResultForUser({ result, ownerRobloxId }, userRobloxId) {
   if (!result) return null;
-  if (!userRobloxId) return result;
+  if (!userRobloxId) return flipTradeResult(result);
   if (!ownerRobloxId) return flipTradeResult(result);
 
   const isOwner = String(userRobloxId) === String(ownerRobloxId);
