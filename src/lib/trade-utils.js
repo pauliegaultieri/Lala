@@ -45,7 +45,7 @@ export function calculateBrainrotValue(baseValueLGC, mutation = null, traits = [
  * @returns {object} - Result and percentage
  */
 export function calculateTradeResult(offeringTotal, lookingForTotal) {
-  const difference = offeringTotal - lookingForTotal;
+  const difference = lookingForTotal - offeringTotal;
   const maxValue = Math.max(offeringTotal, lookingForTotal);
   
   if (maxValue === 0) {
@@ -79,7 +79,7 @@ function flipTradeResult(result) {
 export function getTradeResultForUser({ result, ownerRobloxId }, userRobloxId) {
   if (!result) return null;
   if (!userRobloxId) return result;
-  if (!ownerRobloxId) return result;
+  if (!ownerRobloxId) return flipTradeResult(result);
 
   const isOwner = String(userRobloxId) === String(ownerRobloxId);
   return isOwner ? result : flipTradeResult(result);
