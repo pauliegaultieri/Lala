@@ -156,10 +156,42 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
     }
   }, [isOpen]);
 
-  // Disable background scroll and stop Lenis when modal is open
-  useEffect(() => {
+    useEffect(() => {
     const lenis = lenisRef?.current;
-    const modal = modalRef.current;
+
+    if (isOpen) {
+      // Stop Lenis smooth scrolling
+      if (lenis) {
+        lenis.stop();
+      }
+      
+      // Prevent body scroll on all devices
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+      
+      return () => {
+        // Restore scroll position
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.style.overflow = '';
+        window.scrollTo(0, scrollY);
+        
+        // Restart Lenis
+        if (lenis) {
+          lenis.start();
+        }
+      };
+    }
+  }, [isOpen, lenisRef]);
+  
+  // Disable background scroll and stop Lenis when modal is open
+  // useEffect(() => {
+  //   const lenis = lenisRef?.current;
+  //   const modal = modalRef.current;
     // const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
     // if (isOpen && lenis && !isMobile) {
@@ -191,15 +223,15 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
     //   window.addEventListener("wheel", handleWheel, { passive: false });
     // }
 
-    return () => {
-      document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
-      window.removeEventListener("wheel", handleWheel);
-      if (lenis) {
-        lenis.start();
-      }
-    };
-  }, [isOpen, lenisRef]);
+  //   return () => {
+  //     document.body.style.overflow = "";
+  //     document.documentElement.style.overflow = "";
+  //     window.removeEventListener("wheel", handleWheel);
+  //     if (lenis) {
+  //       lenis.start();
+  //     }
+  //   };
+  // }, [isOpen, lenisRef]);
 
   // Memoized filtered lists (must be before early return)
   const configAllowedMutationIds = configBrainrot ? getAllowedMutationIds(configBrainrot) : [];
