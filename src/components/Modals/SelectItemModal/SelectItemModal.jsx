@@ -159,7 +159,6 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
   // Disable background scroll and stop Lenis when modal is open
   useEffect(() => {
     const lenis = lenisRef?.current;
-    const modal = modalRef.current;
     const htmlElement = document.documentElement;
 
     if (isOpen) {
@@ -177,7 +176,8 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
       document.body.style.position = 'fixed';
       document.body.style.top = `-${scrollY}px`;
       document.body.style.width = '100%';
-      document.body.style.overflow = 'hidden';
+      document.body.style.left = '0';
+      document.body.style.right = '0';
     } else {
       // Restore Lenis
       if (lenis) {
@@ -193,42 +193,21 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
       document.body.style.position = '';
       document.body.style.top = '';
       document.body.style.width = '';
-      document.body.style.overflow = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
       if (scrollY) {
         window.scrollTo(0, parseInt(scrollY || '0') * -1);
       }
     }
 
-    // Handle wheel events to allow modal scrolling
-    const handleWheel = (e) => {
-      if (modal && modal.contains(e.target)) {
-        e.stopPropagation();
-      }
-    };
-
-    // Handle touch events for mobile
-    const handleTouchMove = (e) => {
-      if (modal && !modal.contains(e.target)) {
-        e.preventDefault();
-      }
-    };
-
-    if (isOpen) {
-      window.addEventListener("wheel", handleWheel, { passive: false });
-      document.addEventListener("touchmove", handleTouchMove, { passive: false });
-    }
-
     return () => {
-      window.removeEventListener("wheel", handleWheel);
-      document.removeEventListener("touchmove", handleTouchMove);
-      
       if (!isOpen) {
-        // Cleanup
         const scrollY = document.body.style.top;
         document.body.style.position = '';
         document.body.style.top = '';
         document.body.style.width = '';
-        document.body.style.overflow = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
         if (scrollY) {
           window.scrollTo(0, parseInt(scrollY || '0') * -1);
         }
@@ -514,7 +493,7 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
           relative bg-white dark:bg-slate-900 rounded-[20px] 
           w-[calc(100vw-2rem)] sm:w-[calc(100vw-4rem)] max-w-[1100px] max-h-[85vh] 
           overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-8 
-          flex flex-col gap-6 sm:gap-8 modal-scrollbar overscroll-contain
+          flex flex-col gap-6 sm:gap-8 modal-scrollbar
           transition-all duration-300 ease-out
           ${isAnimating ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-4'}
         `}
