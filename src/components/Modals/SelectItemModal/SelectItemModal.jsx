@@ -140,54 +140,6 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
     }
   }, [searchQuery, selectedCategories, valueRange, isOpen]);
 
-  // Handle animation states
-  useEffect(() => {
-    if (isOpen) {
-      setShouldRender(true);
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setIsAnimating(true);
-        });
-      });
-    } else {
-      setIsAnimating(false);
-      const timer = setTimeout(() => setShouldRender(false), 300);
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen]);
-
-    useEffect(() => {
-    const lenis = lenisRef?.current;
-
-    if (isOpen) {
-      // Stop Lenis smooth scrolling
-      if (lenis) {
-        lenis.stop();
-      }
-      
-      // Prevent body scroll on all devices
-      const scrollY = window.scrollY;
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
-      document.body.style.overflow = 'hidden';
-      
-      return () => {
-        // Restore scroll position
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.width = '';
-        document.body.style.overflow = '';
-        window.scrollTo(0, scrollY);
-        
-        // Restart Lenis
-        if (lenis) {
-          lenis.start();
-        }
-      };
-    }
-  }, [isOpen, lenisRef]);
-  
   // Disable background scroll and stop Lenis when modal is open
   // useEffect(() => {
   //   const lenis = lenisRef?.current;
