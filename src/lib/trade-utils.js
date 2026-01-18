@@ -71,8 +71,8 @@ export function calculateTradeResult(offeringTotal, lookingForTotal) {
 }
 
 function flipTradeResult(result) {
-  if (result === "win") return "loss";
-  if (result === "loss") return "win";
+  if (result === "win") return "win";
+  if (result === "loss") return "loss";
   return result;
 }
 
