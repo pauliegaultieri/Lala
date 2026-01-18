@@ -257,7 +257,7 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
               {/* Scrollable Content */}
               <div 
                 className="p-6 space-y-6 overflow-y-auto modal-scrollbar flex-1"
-                onWheel={(e) => e.stopPropagation()}
+                // onWheel={(e) => e.stopPropagation()}
               >
                 {/* Brainrot Info */}
                 <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-indigo-50 to-[#4F46E5]/10 dark:from-indigo-900/20 dark:to-[#4F46E5]/20 rounded-[16px] border border-[#4F46E5]/20">
