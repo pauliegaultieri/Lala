@@ -140,6 +140,7 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
     }
   }, [searchQuery, selectedCategories, valueRange, isOpen]);
 
+  // Handle animation states
   useEffect(() => {
     if (isOpen) {
       setShouldRender(true);
@@ -155,78 +156,50 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
     }
   }, [isOpen]);
 
-
+  // Disable background scroll and stop Lenis when modal is open
   useEffect(() => {
-    if (!isOpen) return;
-
     const lenis = lenisRef?.current;
-    const scrollY = window.scrollY;
+    const modal = modalRef.current;
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
-    if (lenis) {
+    if (isOpen && lenis && !isMobile) {
       lenis.stop();
     }
 
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.width = '100%';
-    document.body.style.overflow = 'hidden';
+    if (isOpen) {
+      // document.body.style.overflow = "hidden";
+      // document.documentElement.style.overflow = "hidden";
+      if (lenis) {
+        lenis.stop();
+      }
+    } else {
+      document.body.style.overflow = "";
+      // document.documentElement.style.overflow = "";
+      if (lenis) {
+        lenis.start();
+      }
+    }
+
+    // Handle wheel events to allow modal scrolling
+    const handleWheel = (e) => {
+      if (modal && modal.contains(e.target)) {
+        e.stopPropagation();
+      }
+    };
+
+    if (isOpen && !isMobile) {
+      window.addEventListener("wheel", handleWheel, { passive: false });
+    }
 
     return () => {
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      document.body.style.overflow = '';
-      window.scrollTo(0, scrollY);
-      
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+      window.removeEventListener("wheel", handleWheel);
       if (lenis) {
         lenis.start();
       }
     };
   }, [isOpen, lenisRef]);
-  // Disable background scroll and stop Lenis when modal is open
-  // useEffect(() => {
-  //   const lenis = lenisRef?.current;
-  //   const modal = modalRef.current;
-    // const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-
-    // if (isOpen && lenis && !isMobile) {
-    //   lenis.stop();
-    // }
-
-    // if (isOpen) {
-    //   // document.body.style.overflow = "hidden";
-    //   // document.documentElement.style.overflow = "hidden";
-    //   if (lenis) {
-    //     lenis.stop();
-    //   }
-    // } else {
-    //   document.body.style.overflow = "";
-    //   // document.documentElement.style.overflow = "";
-    //   if (lenis) {
-    //     lenis.start();
-    //   }
-    // }
-
-    // // Handle wheel events to allow modal scrolling
-    // const handleWheel = (e) => {
-    //   if (modal && modal.contains(e.target)) {
-    //     e.stopPropagation();
-    //   }
-    // };
-
-    // if (isOpen && !isMobile) {
-    //   window.addEventListener("wheel", handleWheel, { passive: false });
-    // }
-
-  //   return () => {
-  //     document.body.style.overflow = "";
-  //     document.documentElement.style.overflow = "";
-  //     window.removeEventListener("wheel", handleWheel);
-  //     if (lenis) {
-  //       lenis.start();
-  //     }
-  //   };
-  // }, [isOpen, lenisRef]);
 
   // Memoized filtered lists (must be before early return)
   const configAllowedMutationIds = configBrainrot ? getAllowedMutationIds(configBrainrot) : [];
@@ -301,10 +274,6 @@ export default function SelectItemModal({ isOpen, onClose, onSelectItem }) {
               <div 
                 className="p-6 space-y-6 overflow-y-auto modal-scrollbar flex-1"
                 onWheel={(e) => e.stopPropagation()}
-                style={{
-                  WebkitOverflowScrolling: 'touch',
-                  overscrollBehavior: 'contain'
-                }}
               >
                 {/* Brainrot Info */}
                 <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-indigo-50 to-[#4F46E5]/10 dark:from-indigo-900/20 dark:to-[#4F46E5]/20 rounded-[16px] border border-[#4F46E5]/20">
